@@ -72,7 +72,7 @@ export default {
     setCustomSettings(value) {
       this.customSettings = value;
       try {
-        yaml.safeLoad(this.strippedCustomSettings);
+        yaml.load(this.strippedCustomSettings);
         this.error = null;
       } catch (e) {
         this.error = e.message;
@@ -82,14 +82,14 @@ export default {
       if (!this.error) {
         const settings = this.strippedCustomSettings;
         await store.dispatch('data/setSettings', settings);
-        const customSettings = yaml.safeLoad(settings);
+        const customSettings = yaml.load(settings);
         if (customSettings.shortcuts) {
           badgeSvc.addBadge('changeShortcuts');
         }
         const computedSettings = store.getters['data/computedSettings'];
         const customSettingsCount = Object
           .keys(customSettings)
-          .filter(key => key !== 'shortcuts' && computedSettings[key])
+          .filter((key) => key !== 'shortcuts' && computedSettings[key])
           .length;
         if (customSettingsCount) {
           badgeSvc.addBadge('changeSettings');

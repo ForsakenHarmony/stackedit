@@ -1,4 +1,4 @@
-/* global window,MathJax */
+/* global MathJax */
 const { spawn } = require('child_process');
 const fs = require('fs');
 const tmp = require('tmp');
@@ -10,7 +10,7 @@ function waitForJavaScript() {
   if (window.MathJax) {
     // Amazon EC2: fix TeX font detection
     MathJax.Hub.Register.StartupHook('HTML-CSS Jax Startup', function () {
-      var htmlCss = MathJax.OutputJax['HTML-CSS'];
+      const htmlCss = MathJax.OutputJax['HTML-CSS'];
       htmlCss.Font.checkWebFont = function (check, font, callback) {
         if (check.time(callback)) {
           return;

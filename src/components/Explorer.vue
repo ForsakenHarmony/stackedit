@@ -51,7 +51,7 @@ export default {
     ...mapActions('data', [
       'toggleExplorer',
     ]),
-    newItem: isFolder => explorerSvc.newItem(isFolder),
+    newItem: (isFolder) => explorerSvc.newItem(isFolder),
     deleteItem: () => explorerSvc.deleteItem(),
     editItem() {
       const node = this.selectedNode;

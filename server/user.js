@@ -13,14 +13,14 @@ const cb = (resolve, reject) => (err, res) => {
   }
 };
 
-exports.getUser = id => new Promise((resolve, reject) => {
+exports.getUser = (id) => new Promise((resolve, reject) => {
   s3Client.getObject({
     Bucket: conf.values.userBucketName,
     Key: id,
   }, cb(resolve, reject));
 })
   .then(
-    res => JSON.parse(`${res.Body}`),
+    (res) => JSON.parse(`${res.Body}`),
     (err) => {
       if (err.code !== 'NoSuchKey') {
         throw err;
@@ -36,23 +36,21 @@ exports.putUser = (id, user) => new Promise((resolve, reject) => {
   }, cb(resolve, reject));
 });
 
-exports.removeUser = id => new Promise((resolve, reject) => {
+exports.removeUser = (id) => new Promise((resolve, reject) => {
   s3Client.deleteObject({
     Bucket: conf.values.userBucketName,
     Key: id,
   }, cb(resolve, reject));
 });
 
-exports.getUserFromToken = idToken => new Promise((resolve, reject) => verifier
+exports.getUserFromToken = (idToken) => new Promise((resolve, reject) => verifier
   .verify(idToken, conf.values.googleClientId, cb(resolve, reject)))
-  .then(tokenInfo => exports.getUser(tokenInfo.sub));
+  .then((tokenInfo) => exports.getUser(tokenInfo.sub));
 
 exports.userInfo = (req, res) => exports.getUserFromToken(req.query.idToken)
   .then(
-    user => res.send(Object.assign({
-      sponsorUntil: 0,
-    }, user)),
-    err => res
+    (user) => res.send({ sponsorUntil: 0, ...user }),
+    (err) => res
       .status(400)
       .send(err ? err.message || err.toString() : 'invalid_token'),
   );
@@ -73,11 +71,11 @@ exports.paypalIpn = (req, res, next) => Promise.resolve()
       sponsorUntil = Date.now() + (5 * 366 * 24 * 60 * 60 * 1000); // 5 years
     }
     if (
-      req.body.receiver_email !== conf.values.paypalReceiverEmail ||
-      req.body.payment_status !== 'Completed' ||
-      req.body.mc_currency !== 'USD' ||
-      (req.body.txn_type !== 'web_accept' && req.body.txn_type !== 'subscr_payment') ||
-      !userId || !sponsorUntil
+      req.body.receiver_email !== conf.values.paypalReceiverEmail
+      || req.body.payment_status !== 'Completed'
+      || req.body.mc_currency !== 'USD'
+      || (req.body.txn_type !== 'web_accept' && req.body.txn_type !== 'subscr_payment')
+      || !userId || !sponsorUntil
     ) {
       // Ignoring PayPal IPN
       return res.end();
@@ -112,5 +110,5 @@ exports.checkSponsor = (idToken) => {
     return Promise.resolve(false);
   }
   return exports.getUserFromToken(idToken)
-    .then(userInfo => userInfo && userInfo.sponsorUntil > Date.now(), () => false);
+    .then((userInfo) => userInfo && userInfo.sponsorUntil > Date.now(), () => false);
 };

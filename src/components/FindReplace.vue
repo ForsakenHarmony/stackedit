@@ -47,7 +47,7 @@ const accessor = (fieldName, setterName) => ({
   },
 });
 
-const computedLayoutSetting = key => ({
+const computedLayoutSetting = (key) => ({
   get() {
     return store.getters['data/layoutSettings'][key];
   },
@@ -166,7 +166,7 @@ export default {
       const startOffset = Math.min(selectionMgr.selectionStart, selectionMgr.selectionEnd);
       const endOffset = Math.max(selectionMgr.selectionStart, selectionMgr.selectionEnd);
       const keys = Object.keys(this.classAppliers);
-      const finder = checker => (key) => {
+      const finder = (checker) => (key) => {
         if (checker(this.classAppliers[key]) && selectedClassApplier !== this.classAppliers[key]) {
           this.selectedClassApplier = this.classAppliers[key];
           return true;
@@ -175,13 +175,13 @@ export default {
       };
       if (mode === 'backward') {
         this.selectedClassApplier = this.classAppliers[keys[keys.length - 1]];
-        keys.reverse().some(finder(classApplier => classApplier.startMarker.offset <= startOffset));
+        keys.reverse().some(finder((classApplier) => classApplier.startMarker.offset <= startOffset));
       } else if (mode === 'selection') {
-        keys.some(finder(classApplier => classApplier.startMarker.offset === startOffset &&
-          classApplier.endMarker.offset === endOffset));
+        keys.some(finder((classApplier) => classApplier.startMarker.offset === startOffset
+          && classApplier.endMarker.offset === endOffset));
       } else if (mode === 'forward') {
         this.selectedClassApplier = this.classAppliers[keys[0]];
-        keys.some(finder(classApplier => classApplier.endMarker.offset >= endOffset));
+        keys.some(finder((classApplier) => classApplier.endMarker.offset >= endOffset));
       }
       if (this.selectedClassApplier) {
         selectionMgr.setSelectionStartEnd(
@@ -266,8 +266,8 @@ export default {
     window.addEventListener('keyup', this.onKeyup);
 
     // Unselect class applier when focus is out of the panel
-    this.onFocusIn = () => this.$el.contains(document.activeElement) ||
-      setTimeout(() => this.unselectClassApplier(), 15);
+    this.onFocusIn = () => this.$el.contains(document.activeElement)
+      || setTimeout(() => this.unselectClassApplier(), 15);
     window.addEventListener('focusin', this.onFocusIn);
   },
   destroyed() {

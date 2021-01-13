@@ -71,7 +71,7 @@ const store = new Vuex.Store({
   getters: {
     allItemsById: (state) => {
       const result = {};
-      constants.types.forEach(type => Object.assign(result, state[type].itemsById));
+      constants.types.forEach((type) => Object.assign(result, state[type].itemsById));
       return result;
     },
     pathsByItemId: (state, getters) => {
@@ -89,8 +89,8 @@ const store = new Vuex.Store({
         }
 
         if (node.isFolder) {
-          node.folders.forEach(child => processNode(child, path));
-          node.files.forEach(child => processNode(child, path));
+          node.folders.forEach((child) => processNode(child, path));
+          node.files.forEach((child) => processNode(child, path));
         }
       };
 

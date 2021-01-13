@@ -28,8 +28,8 @@
       </div>
       <div class="form-entry">
         <label class="form-entry__label">Value</label>
-        <div class="form-entry__field" v-for="(template, id) in templates" :key="id" v-if="id === selectedId">
-          <code-editor lang="handlebars" :value="template.value" :disabled="isReadOnly" @changed="template.value = $event"></code-editor>
+        <div class="form-entry__field">
+          <code-editor lang="handlebars" :value="selectedTemplate.value" :disabled="isReadOnly" @changed="selectedTemplate.value = $event"></code-editor>
         </div>
       </div>
       <div v-if="!isReadOnly">
@@ -37,8 +37,8 @@
         <div class="form-entry" v-else>
           <br>
           <label class="form-entry__label">Helpers</label>
-          <div class="form-entry__field" v-for="(template, id) in templates" :key="id" v-if="id === selectedId">
-            <code-editor lang="javascript" :value="template.helpers" @changed="template.helpers = $event"></code-editor>
+          <div class="form-entry__field">
+            <code-editor lang="javascript" :value="selectedTemplate.helpers" @changed="selectedTemplate.helpers = $event"></code-editor>
           </div>
         </div>
       </div>
@@ -89,6 +89,9 @@ export default {
     ]),
     isReadOnly() {
       return this.templates[this.selectedId].isAdditional;
+    },
+    selectedTemplate() {
+      return this.templates[this.selectedId];
     },
   },
   created() {
@@ -159,10 +162,10 @@ export default {
       await store.dispatch('data/setTemplatesById', this.templates);
       const newTemplateIds = Object.keys(store.getters['data/templatesById']);
       const createdCount = newTemplateIds
-        .filter(id => !oldTemplateIds.includes(id))
+        .filter((id) => !oldTemplateIds.includes(id))
         .length;
       const removedCount = oldTemplateIds
-        .filter(id => !newTemplateIds.includes(id))
+        .filter((id) => !newTemplateIds.includes(id))
         .length;
       if (createdCount) {
         badgeSvc.addBadge('addTemplate');

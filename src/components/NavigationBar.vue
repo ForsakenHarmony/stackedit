@@ -47,7 +47,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapGetters, mapActions } from 'vuex';
+import {
+  mapState, mapMutations, mapGetters, mapActions,
+} from 'vuex';
 import editorSvc from '../services/editorSvc';
 import syncSvc from '../services/syncSvc';
 import publishSvc from '../services/publishSvc';
@@ -66,7 +68,7 @@ const getShortcut = (method) => {
   let result = '';
   Object.entries(store.getters['data/computedSettings'].shortcuts).some(([keys, shortcut]) => {
     if (`${shortcut.method || shortcut}` === method) {
-      result = keys.split('+').map(key => key.toLowerCase()).map((key) => {
+      result = keys.split('+').map((key) => key.toLowerCase()).map((key) => {
         if (key === 'mod') {
           return mod;
         }
@@ -113,15 +115,15 @@ export default {
       publishLocations: 'current',
     }),
     pagedownButtons() {
-      return pagedownButtons.map(button => ({
+      return pagedownButtons.map((button) => ({
         ...button,
         titleWithShortcut: `${button.title}${getShortcut(button.method)}`,
         iconClass: `icon-${button.icon}`,
       }));
     },
     isSyncPossible() {
-      return store.getters['workspace/syncToken'] ||
-        store.getters['syncLocation/current'].length;
+      return store.getters['workspace/syncToken']
+        || store.getters['syncLocation/current'].length;
     },
     showSpinner() {
       return !store.state.queue.isEmpty;
@@ -130,6 +132,7 @@ export default {
       if (!this.mounted) {
         return 0;
       }
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       this.titleFakeElt.textContent = this.title;
       const width = this.titleFakeElt.getBoundingClientRect().width + 2; // 2px for the caret
       return Math.min(width, this.styles.titleMaxWidth);

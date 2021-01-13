@@ -39,7 +39,7 @@ export default modalTemplate({
     googlePhotosTokens() {
       const googleTokensBySub = store.getters['data/googleTokensBySub'];
       return Object.values(googleTokensBySub)
-        .filter(token => token.isPhotos)
+        .filter((token) => token.isPhotos)
         .sort((token1, token2) => token1.name.localeCompare(token2.name));
     },
   },

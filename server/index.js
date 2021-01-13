@@ -1,6 +1,7 @@
 const compression = require('compression');
 const serveStatic = require('serve-static');
 const bodyParser = require('body-parser');
+// eslint-disable-next-line import/no-extraneous-dependencies
 const path = require('path');
 const user = require('./user');
 const github = require('./github');
@@ -8,9 +9,9 @@ const pdf = require('./pdf');
 const pandoc = require('./pandoc');
 const conf = require('./conf');
 
-const resolvePath = pathToResolve => path.join(__dirname, '..', pathToResolve);
+const resolvePath = (pathToResolve) => path.join(__dirname, '..', pathToResolve);
 
-module.exports = (app, serveV4) => {
+module.exports = (app) => {
   if (process.env.NODE_ENV === 'production') {
     // Enable CORS for fonts
     app.all('*', (req, res, next) => {
@@ -33,14 +34,6 @@ module.exports = (app, serveV4) => {
     extended: false,
   }), user.paypalIpn);
 
-  if (serveV4) {
-    /* eslint-disable global-require, import/no-unresolved */
-    app.post('/sshPublish', require('../stackedit_v4/app/ssh').publish);
-    app.post('/picasaImportImg', require('../stackedit_v4/app/picasa').importImg);
-    app.get('/downloadImport', require('../stackedit_v4/app/download').importPublic);
-    /* eslint-enable global-require, import/no-unresolved */
-  }
-
   // Serve landing.html
   app.get('/', (req, res) => res.sendFile(resolvePath('static/landing/index.html')));
   // Serve sitemap.xml
@@ -48,18 +41,10 @@ module.exports = (app, serveV4) => {
   // Serve callback.html
   app.get('/oauth2/callback', (req, res) => res.sendFile(resolvePath('static/oauth2/callback.html')));
   // Google Drive action receiver
-  app.get('/googleDriveAction', (req, res) =>
-    res.redirect(`./app#providerId=googleDrive&state=${encodeURIComponent(req.query.state)}`));
+  app.get('/googleDriveAction', (req, res) => res.redirect(`./app#providerId=googleDrive&state=${encodeURIComponent(req.query.state)}`));
 
   // Serve static resources
   if (process.env.NODE_ENV === 'production') {
-    if (serveV4) {
-      // Serve editor.html in /viewer
-      app.get('/editor', (req, res) => res.sendFile(resolvePath('stackedit_v4/views/editor.html')));
-      // Serve viewer.html in /viewer
-      app.get('/viewer', (req, res) => res.sendFile(resolvePath('stackedit_v4/views/viewer.html')));
-    }
-
     // Serve index.html in /app
     app.get('/app', (req, res) => res.sendFile(resolvePath('dist/index.html')));
 
@@ -74,12 +59,5 @@ module.exports = (app, serveV4) => {
     }));
 
     app.use(serveStatic(resolvePath('dist')));
-
-    if (serveV4) {
-      app.use(serveStatic(path.dirname(resolvePath('stackedit_v4/public/cache.manifest'))));
-
-      // Error 404
-      app.use((req, res) => res.status(404).sendFile(resolvePath('stackedit_v4/views/error_404.html')));
-    }
   }
 };

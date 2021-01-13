@@ -111,13 +111,13 @@ import store from '../../store';
 import badgeSvc from '../../services/badgeSvc';
 
 const tokensToArray = (tokens, filter = () => true) => Object.values(tokens)
-  .filter(token => filter(token))
+  .filter((token) => filter(token))
   .sort((token1, token2) => token1.name.localeCompare(token2.name));
 
 const openSyncModal = (token, type) => store.dispatch('modal/open', {
   type,
   token,
-}).then(syncLocation => syncSvc.createSyncLocation(syncLocation));
+}).then((syncLocation) => syncSvc.createSyncLocation(syncLocation));
 
 export default {
   components: {
@@ -152,7 +152,7 @@ export default {
       return tokensToArray(store.getters['data/gitlabTokensBySub']);
     },
     googleDriveTokens() {
-      return tokensToArray(store.getters['data/googleTokensBySub'], token => token.isDrive);
+      return tokensToArray(store.getters['data/googleTokensBySub'], (token) => token.isDrive);
     },
     noToken() {
       return !this.googleDriveTokens.length

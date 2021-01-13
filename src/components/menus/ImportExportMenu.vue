@@ -57,7 +57,7 @@ import badgeSvc from '../../services/badgeSvc';
 
 const turndownService = new TurndownService(store.getters['data/computedSettings'].turndown);
 
-const readFile = file => new Promise((resolve) => {
+const readFile = (file) => new Promise((resolve) => {
   if (file) {
     const reader = new FileReader();
     reader.onload = (e) => {

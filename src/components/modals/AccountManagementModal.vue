@@ -101,34 +101,34 @@ export default {
     ]),
     entries() {
       return [
-        ...Object.values(store.getters['data/googleTokensBySub']).map(token => ({
+        ...Object.values(store.getters['data/googleTokensBySub']).map((token) => ({
           token,
           providerId: 'google',
           userId: token.sub,
           name: token.name,
           scopes: ['openid', 'profile', ...token.scopes
-            .map(scope => scope.replace(/^https:\/\/www.googleapis.com\/auth\//, ''))],
+            .map((scope) => scope.replace(/^https:\/\/www.googleapis.com\/auth\//, ''))],
         })),
-        ...Object.values(store.getters['data/couchdbTokensBySub']).map(token => ({
+        ...Object.values(store.getters['data/couchdbTokensBySub']).map((token) => ({
           token,
           providerId: 'couchdb',
           url: token.dbUrl,
           name: token.name,
         })),
-        ...Object.values(store.getters['data/dropboxTokensBySub']).map(token => ({
+        ...Object.values(store.getters['data/dropboxTokensBySub']).map((token) => ({
           token,
           providerId: 'dropbox',
           userId: token.sub,
           name: token.name,
         })),
-        ...Object.values(store.getters['data/githubTokensBySub']).map(token => ({
+        ...Object.values(store.getters['data/githubTokensBySub']).map((token) => ({
           token,
           providerId: 'github',
           userId: token.sub,
           name: token.name,
           scopes: token.scopes,
         })),
-        ...Object.values(store.getters['data/gitlabTokensBySub']).map(token => ({
+        ...Object.values(store.getters['data/gitlabTokensBySub']).map((token) => ({
           token,
           providerId: 'gitlab',
           url: token.serverUrl,
@@ -136,14 +136,14 @@ export default {
           name: token.name,
           scopes: ['api'],
         })),
-        ...Object.values(store.getters['data/wordpressTokensBySub']).map(token => ({
+        ...Object.values(store.getters['data/wordpressTokensBySub']).map((token) => ({
           token,
           providerId: 'wordpress',
           userId: token.sub,
           name: token.name,
           scopes: ['global'],
         })),
-        ...Object.values(store.getters['data/zendeskTokensBySub']).map(token => ({
+        ...Object.values(store.getters['data/zendeskTokensBySub']).map((token) => ({
           token,
           providerId: 'zendesk',
           url: `https://${token.subdomain}.zendesk.com/`,

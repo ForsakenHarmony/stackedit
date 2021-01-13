@@ -53,7 +53,7 @@ export default {
       'badgeTree',
     ]),
     badgeCount() {
-      return store.getters['data/allBadges'].filter(badge => badge.isEarned).length;
+      return store.getters['data/allBadges'].filter((badge) => badge.isEarned).length;
     },
     featureCount() {
       return store.getters['data/allBadges'].length;

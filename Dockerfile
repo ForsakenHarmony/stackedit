@@ -1,27 +1,47 @@
-FROM benweet/stackedit-base
+FROM node:12-alpine AS builder
 
-RUN mkdir -p /opt/stackedit/stackedit_v4
-WORKDIR /opt/stackedit/stackedit_v4
+WORKDIR /app
 
-ENV SERVE_V4 true
-ENV V4_VERSION 4.3.22
-RUN npm pack stackedit@$V4_VERSION \
-  && tar xzf stackedit-*.tgz --strip 1 \
-  && yarn \
-  && yarn cache clean \
-  && rm -rf ~/.cache/bower \
-  && rm -rf ~/.local/share/bower
+RUN apk add --no-cache make gcc git g++ python
 
-WORKDIR /opt/stackedit
+RUN mkdir -p /app/server
+COPY server/package.json server/yarn.lock ./server/
+RUN cd server && yarn install && yarn cache clean && cd /app
 
-COPY package*json /opt/stackedit/
-COPY gulpfile.js /opt/stackedit/
-RUN npm install --unsafe-perm \
-  && npm cache clean --force
-COPY . /opt/stackedit
+COPY package.json yarn.lock ./
+RUN yarn install && yarn cache clean
+
+COPY . ./
+
 ENV NODE_ENV production
-RUN npm run build
+RUN yarn build
 
+FROM node:12-alpine AS runner
+
+WORKDIR /app
 EXPOSE 8080
+
+COPY . ./
+
+# Adding production dependencies to image
+COPY --from=builder /app/server/node_modules /app/node_modules
+# copy build
+COPY --from=builder /app/dist /app/dist
+
+ENV \
+    LISTENING_PORT=8080 \
+    ROOT_URL=/ \
+    NODE_ENV=production \
+    PANDOC_PATH=pandoc \
+    WKHTMLTOPDF_PATH=wkhtmltopdf \
+    USER_BUCKET_NAME=stackedit-users \
+    PAYPAL_RECEIVER_EMAIL= \
+    DROPBOX_APP_KEY= \
+    DROPBOX_APP_KEY_FULL= \
+    GITHUB_CLIENT_ID= \
+    GITHUB_CLIENT_SECRET= \
+    GOOGLE_CLIENT_ID= \
+    GOOGLE_API_KEY= \
+    WORDPRESS_CLIENT_ID=
 
 CMD [ "node", "." ]

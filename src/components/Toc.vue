@@ -65,8 +65,8 @@ export default {
       const scrollPosition = editorSvc.getScrollPosition();
       if (scrollPosition) {
         const sectionDesc = editorSvc.previewCtxMeasured.sectionDescList[scrollPosition.sectionIdx];
-        this.maskY = sectionDesc.tocDimension.startOffset +
-          (scrollPosition.posInSection * sectionDesc.tocDimension.height);
+        this.maskY = sectionDesc.tocDimension.startOffset
+          + (scrollPosition.posInSection * sectionDesc.tocDimension.height);
       }
     };
 

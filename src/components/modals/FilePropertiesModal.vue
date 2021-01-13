@@ -202,7 +202,7 @@ export default {
     setYamlProperties(value) {
       this.yamlProperties = value;
       try {
-        this.properties = yaml.safeLoad(value);
+        this.properties = yaml.load(value);
         this.error = null;
       } catch (e) {
         this.error = e.message;
@@ -217,14 +217,14 @@ export default {
         this.setYamlTab();
       } else {
         const properties = this.properties || {};
-        if (Object.keys(metadataProperties).some(key => properties[key])) {
+        if (Object.keys(metadataProperties).some((key) => properties[key])) {
           badgeSvc.addBadge('setMetadata');
         }
         const extensions = properties.extensions || {};
         if (extensions.preset) {
           badgeSvc.addBadge('changePreset');
         }
-        if (Object.keys(extensions).filter(key => key !== 'preset').length) {
+        if (Object.keys(extensions).filter((key) => key !== 'preset').length) {
           badgeSvc.addBadge('changeExtension');
         }
         store.commit('content/patchItem', {

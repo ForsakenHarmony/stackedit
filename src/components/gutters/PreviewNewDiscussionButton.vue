@@ -24,8 +24,8 @@ export default {
         let offset;
         // Show the button if content is not a revision and preview selection is not empty
         if (
-          !store.state.content.revisionContent &&
-          editorSvc.previewSelectionRange
+          !store.state.content.revisionContent
+          && editorSvc.previewSelectionRange
         ) {
           this.selection = editorSvc.getTrimmedSelection();
           if (this.selection) {

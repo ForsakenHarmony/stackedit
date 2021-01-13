@@ -47,7 +47,6 @@
 <script>
 import { mapState, mapMutations, mapGetters } from 'vuex';
 import providerRegistry from '../../services/providers/common/providerRegistry';
-import MenuEntry from './common/MenuEntry';
 import UserImage from '../UserImage';
 import UserName from '../UserName';
 import EditorClassApplier from '../common/EditorClassApplier';
@@ -69,7 +68,6 @@ const spacerThreshold = 6 * 60 * 60 * 1000; // 6h
 
 export default {
   components: {
-    MenuEntry,
     UserImage,
     UserName,
   },
@@ -200,15 +198,14 @@ export default {
         }
       }
       if (revisionContentPromise) {
-        revisionContentPromise.then(revisionContent =>
-          store.dispatch('content/setRevisionContent', revisionContent));
+        revisionContentPromise.then((revisionContent) => store.dispatch('content/setRevisionContent', revisionContent));
       }
     },
     refreshHighlighters() {
       const { revisionContent } = this;
-      editorClassAppliers.forEach(editorClassApplier => editorClassApplier.stop());
+      editorClassAppliers.forEach((editorClassApplier) => editorClassApplier.stop());
       editorClassAppliers = [];
-      previewClassAppliers.forEach(previewClassApplier => previewClassApplier.stop());
+      previewClassAppliers.forEach((previewClassApplier) => previewClassApplier.stop());
       previewClassAppliers = [];
       if (revisionContent) {
         let offset = 0;

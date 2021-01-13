@@ -126,7 +126,7 @@ import publishSvc from '../../services/publishSvc';
 import store from '../../store';
 
 const tokensToArray = (tokens, filter = () => true) => Object.values(tokens)
-  .filter(token => filter(token))
+  .filter((token) => filter(token))
   .sort((token1, token2) => token1.name.localeCompare(token2.name));
 
 const publishModalOpener = (type, featureId) => async (token) => {
@@ -160,7 +160,7 @@ export default {
       return `"${store.getters['file/current'].name}"`;
     },
     bloggerTokens() {
-      return tokensToArray(store.getters['data/googleTokensBySub'], token => token.isBlogger);
+      return tokensToArray(store.getters['data/googleTokensBySub'], (token) => token.isBlogger);
     },
     dropboxTokens() {
       return tokensToArray(store.getters['data/dropboxTokensBySub']);
@@ -172,7 +172,7 @@ export default {
       return tokensToArray(store.getters['data/gitlabTokensBySub']);
     },
     googleDriveTokens() {
-      return tokensToArray(store.getters['data/googleTokensBySub'], token => token.isDrive);
+      return tokensToArray(store.getters['data/googleTokensBySub'], (token) => token.isDrive);
     },
     wordpressTokens() {
       return tokensToArray(store.getters['data/wordpressTokensBySub']);
